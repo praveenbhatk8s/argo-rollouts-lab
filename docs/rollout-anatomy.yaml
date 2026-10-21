@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1     # ← changed from apps/v1
+kind: Rollout                        # ← changed from Deployment
+metadata:
+  name: rollouts-demo
+spec:
+  replicas: 4
+  revisionHistoryLimit: 3
+  selector:                          # identical to the Deployment
+    matchLabels:
+      app: rollouts-demo
+  template:                          # identical pod template
+    metadata:
+      labels:
+        app: rollouts-demo
+    spec:
+      containers:
+        - name: rollouts-demo
+          image: argoproj/rollouts-demo:blue
+          ports:
+            - containerPort: 8080
+  strategy:                          # ← the only real addition
+    canary:
+      steps:
+        - setWeight: 25              # move 25% toward the new version
+        - pause: {}                  # wait indefinitely for a manual promote
+        - setWeight: 50
+        - pause: { duration: 30s }   # timed pause, then continue automatically
+        - setWeight: 75
+        - pause: { duration: 30s }
+                                     # after the last step → 100%, new version becomes stable
