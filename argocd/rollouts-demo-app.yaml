@@ -12,6 +12,12 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: demo
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: rollouts-demo
+      jsonPointers:
+        - /spec/replicas
   syncPolicy:
     automated:
       prune: true
@@ -19,3 +25,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PruneLast=true
+      - RespectIgnoreDifferences=true

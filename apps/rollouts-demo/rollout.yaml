@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: rollouts-demo
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: rollouts-demo
+  workloadRef:                     # no pod template here: it's read from the Deployment
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rollouts-demo
+    scaleDown: progressively       # scale the Deployment down as Rollout pods become ready
+  strategy:
+    canary:
+      steps:
+        - setWeight: 25
+        - pause: {}
+        - setWeight: 50
+        - pause: { duration: 30s }
+        - setWeight: 75
+        - pause: { duration: 30s }
