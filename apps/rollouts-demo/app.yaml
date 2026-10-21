@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: rollouts-demo
 spec:
@@ -19,9 +19,19 @@ spec:
             - containerPort: 8080
           readinessProbe:
             httpGet: { path: /, port: 8080 }
+            initialDelaySeconds: 15     # simulates real app warm-up (JVM, cache load, migrations)
           resources:
             requests: { cpu: 50m, memory: 32Mi }
             limits:   { cpu: 200m, memory: 64Mi }
+  strategy:
+    canary:
+      steps:
+        - setWeight: 25
+        - pause: {}
+        - setWeight: 50
+        - pause: { duration: 30s }
+        - setWeight: 75
+        - pause: { duration: 30s }
 ---
 apiVersion: v1
 kind: Service
