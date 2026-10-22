@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: rollouts-demo
-          image: argoproj/rollouts-demo:orange
+          image: argoproj/rollouts-demo:purple
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -22,7 +22,13 @@ spec:
             initialDelaySeconds: 15
           resources:
             requests: { cpu: 50m, memory: 32Mi }
-            limits:   { cpu: 200m, memory: 64Mi }        
+            limits:   { cpu: 200m, memory: 64Mi }       
+        - name: cpu-regression        # simulates a release that burns CPU
+          image: busybox:1.36
+          command: ["sh", "-c", "while true; do :; done"]
+          resources:
+            requests: { cpu: 10m, memory: 8Mi }
+            limits:   { cpu: 200m, memory: 16Mi } 
 ---
 apiVersion: v1
 kind: Service
