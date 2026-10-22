@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: rollouts-demo
-          image: argoproj/rollouts-demo:yellow
+          image: argoproj/rollouts-demo:orange
           ports:
             - containerPort: 8080
           readinessProbe:
