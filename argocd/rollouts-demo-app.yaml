@@ -18,6 +18,11 @@ spec:
       name: rollouts-demo
       jsonPointers:
         - /spec/replicas
+    - group: argoproj.io
+      kind: Rollout
+      name: rollouts-demo
+      jsonPointers:
+        - /spec/replicas
   syncPolicy:
     automated:
       prune: true

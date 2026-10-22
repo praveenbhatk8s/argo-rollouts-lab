@@ -1,0 +1,21 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: rollouts-demo
+spec:
+  scaleTargetRef:
+    apiVersion: argoproj.io/v1alpha1   # not apps/v1
+    kind: Rollout                      # NOT the Deployment, which is only the template holder
+    name: rollouts-demo
+  minReplicaCount: 2
+  maxReplicaCount: 10
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 60   # faster than the 5-minute default, for the lab
+  triggers:
+    - type: cpu
+      metricType: Utilization
+      metadata:
+        value: "50"     # target 50% of the CPU request (50m)
