@@ -1,0 +1,3 @@
+POD                             NAME            CPU(cores)   MEMORY(bytes)   
+rollouts-demo-d88b9449c-vm6vt   rollouts-demo   2m           3Mi             
+rollouts-demo-d88b9449c-xlb5p   rollouts-demo   2m           2Mi             
